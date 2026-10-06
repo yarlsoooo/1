@@ -80,13 +80,7 @@ def status_report(name, robot_type, hp, max_hp, battery):
 
 
 def analyze_damage_log(lines):
-    """TODO(Q2)：解析混合格式伤害日志，返回固定契约的统计 dict；
-    行格式、去重与统计口径见题面 Q2 规范。
-
-    avg 按有效伤害项计算：每个传感器段和每条有效 JSON 记录各计一项。
-    most_hit 出现并列时按 front、left、right 的顺序返回首个最大部位。
-    若输入迭代器在读取期间抛出异常，停止读取并返回此前已解析的统计。
-    raise NotImplementedError("Q2 analyze_damage_log：题面 Q2·多源日志解析与统计")"""
+   
     # 初始化
     by_armor = {"front": 0, "left": 0, "right": 0}
     total = 0
