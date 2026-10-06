@@ -162,11 +162,12 @@ class SentryGrid:
         self._height = int(height)
         if self._width <= 0 or self._height <= 0:
             raise ValueError("地图尺寸必须为正")
-        # 障碍坐标存入 set，查询 O(1)——已有实现，勿改。
+        # Freeze obstacle coordinates after normalization to keep the public view read-only.
         self._obstacles = set()
         for ob in obstacles:
             x, y = ob
             self._obstacles.add((int(x), int(y)))
+        self._obstacles = frozenset(self._obstacles)
         if not isinstance(enemy_pos, (tuple, list)) or len(enemy_pos) != 2:
             raise TypeError("enemy_pos 需要长度为 2 的 tuple/list")
         self._enemy_pos = self._clamp_cell(enemy_pos)
@@ -216,7 +217,7 @@ class SentryGrid:
 
     @property
     def obstacles(self):
-        """障碍集合的只读视图（内部 set 引用，不要修改它）。"""
+        """不可变的障碍坐标集合。"""
         return self._obstacles
 
     @property

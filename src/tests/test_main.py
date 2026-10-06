@@ -113,6 +113,17 @@ class TestQ3:
         assert grid.enemy_pos == (4, 4)
         assert grid.fuel == 100
 
+    def test_obstacles_are_exposed_as_immutable_set(self):
+        source = {(2, 2)}
+        grid = SentryGrid(5, 5, source, (4, 4))
+
+        source.add((3, 3))
+        assert grid.obstacles == frozenset({(2, 2)})
+        with pytest.raises(AttributeError):
+            grid.obstacles.add((1, 1))
+        assert grid.is_blocked(2, 2)
+        assert not grid.is_blocked(1, 1)
+
     def test_setter_type_error(self):
         grid = SentryGrid(5, 5, [], (4, 4))
         try:
