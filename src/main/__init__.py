@@ -403,6 +403,8 @@ def decide(sensor, state, hp, heat):
 # ---------------------------------------------------------------------------
 # Q6 巡逻任务（题面 Q6·巡逻契约与验收阈值）
 # ---------------------------------------------------------------------------
+
+
 def run_patrol(grid, max_steps=500):
     """Run the patrol loop, using a shortest-path step when greedy stalls."""
     steps = 0
