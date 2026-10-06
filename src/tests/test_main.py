@@ -92,6 +92,15 @@ class TestQ2:
                        "most_hit": None,
                        "avg": 0.0}
 
+    def test_reader_failure_returns_accumulated_stats(self):
+        def failing_reader():
+            yield "F:10"
+            raise RuntimeError("reader failed")
+
+        got = call(M.analyze_damage_log, failing_reader())
+        assert got["total"] == 10
+        assert got["by_armor"] == {"front": 10, "left": 0, "right": 0}
+
 
 # ---------------------------------------------------------------------------
 # Q3 SentryGrid
@@ -111,6 +120,18 @@ class TestQ3:
         except TypeError:
             return
         pytest.fail("长度 != 2 应抛 TypeError")
+
+    def test_setter_only_translates_expected_conversion_errors(self):
+        grid = SentryGrid(5, 5, [], (4, 4))
+
+        class UnexpectedCoordinateError:
+            def __int__(self):
+                raise RuntimeError("unexpected conversion failure")
+
+        with pytest.raises(TypeError, match="元素必须可转换为整数"):
+            grid.current_pos = ("invalid", 1)
+        with pytest.raises(RuntimeError, match="unexpected conversion failure"):
+            grid.current_pos = (UnexpectedCoordinateError(), 1)
 
     def test_move_forward(self):
         grid = SentryGrid(5, 5, [], (4, 4), start_pos=(1, 1),

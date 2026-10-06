@@ -79,10 +79,7 @@ def analyze_damage_log(lines):
     seen_ids = set()
     sensor_armor = {"F": "front", "L": "left", "R": "right"}
 
-    try:
-        iterator = iter(lines)
-    except Exception:
-        iterator = iter(())
+    iterator = iter(lines)
 
     while True:
         try:
@@ -90,6 +87,7 @@ def analyze_damage_log(lines):
         except StopIteration:
             break
         except Exception:
+            # The contract returns statistics accumulated before a reader fails.
             break
 
         try:
@@ -137,7 +135,8 @@ def analyze_damage_log(lines):
                 by_armor[armor] += damage
                 total += damage
                 event_count += 1
-        except Exception:
+        except (AttributeError, TypeError, ValueError, OverflowError,
+                RecursionError):
             # Malformed lines are ignored; one bad record must not abort parsing.
             continue
 
@@ -243,8 +242,8 @@ class SentryGrid:
             raise TypeError("current_pos 需要长度为 2 的 tuple/list")
         try:
             self._pos = tuple(self._clamp_cell(value))
-        except Exception:
-            raise TypeError("current_pos 需要长度为 2 的 tuple/list")
+        except (TypeError, ValueError, OverflowError) as exc:
+            raise TypeError("current_pos 元素必须可转换为整数") from exc
 
     def move_forward(self):
         """TODO(Q3)：朝当前 facing 前进一格，返回执行后的位置；
