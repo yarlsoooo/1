@@ -187,6 +187,16 @@ class TestQ5:
                    SentryState.SUSPECT, 100, 0)
         assert got == ("SHOOT", SentryState.ENGAGE)
 
+    def test_engage_lost_enemy_requires_two_missing_frames(self):
+        sensor = {"enemy_frames": (True, False), "enemy_dist": 4,
+                  "robot_type": "INFANTRY", "max_hp": 100}
+        assert call(M.decide, sensor, SentryState.ENGAGE, 80, 0) == (
+            "HOLD_FIRE", SentryState.ENGAGE)
+
+        sensor["enemy_frames"] = (False, False)
+        assert call(M.decide, sensor, SentryState.ENGAGE, 80, 0) == (
+            "SCAN", SentryState.SUSPECT)
+
     def test_low_hp_retreats(self):
         got = call(M.decide,
                    {"enemy_frames": (True, True), "enemy_dist": 1,
@@ -241,6 +251,7 @@ class TestQ6:
         ring = {(x, -1) for x in range(-1, 6)} | {(x, 5) for x in range(-1, 6)}
         ring |= {(-1, y) for y in range(-1, 6)} | {(5, y) for y in range(-1, 6)}
         assert call(M.bfs_path_length, (2, 2), (2, 2), ring) == 0
+        assert call(M.bfs_path_length, (2, 2), (2, 2), ring | {(2, 2)}) == 0
         assert call(M.bfs_path_length, (0, 0), (4, 4), ring) == 8
         sealed = ring | {(2, y) for y in range(5)}
         assert call(M.bfs_path_length, (0, 0), (4, 4), sealed) == -1
