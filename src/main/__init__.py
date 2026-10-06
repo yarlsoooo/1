@@ -13,6 +13,7 @@
 import json
 from collections import deque
 from enum import Enum
+from types import MappingProxyType
 
 
 # ---------------------------------------------------------------------------
@@ -30,6 +31,20 @@ class Facing(Enum):
     def delta(self):
         """该朝向的单位位移向量 (dx, dy)。"""
         return self.value[0], self.value[1]
+
+
+_LEFT_TURNS = MappingProxyType({
+    Facing.UP: Facing.LEFT,
+    Facing.LEFT: Facing.DOWN,
+    Facing.DOWN: Facing.RIGHT,
+    Facing.RIGHT: Facing.UP,
+})
+_RIGHT_TURNS = MappingProxyType({
+    Facing.UP: Facing.RIGHT,
+    Facing.RIGHT: Facing.DOWN,
+    Facing.DOWN: Facing.LEFT,
+    Facing.LEFT: Facing.UP,
+})
 
 
 # ---------------------------------------------------------------------------
@@ -264,22 +279,12 @@ class SentryGrid:
 
     def turn_left(self):
         """TODO(Q3)：原地左转 90°，返回新的 Facing（不耗电）。"""
-        self._facing = {
-            Facing.UP: Facing.LEFT,
-            Facing.LEFT: Facing.DOWN,
-            Facing.DOWN: Facing.RIGHT,
-            Facing.RIGHT: Facing.UP,
-        }[self._facing]
+        self._facing = _LEFT_TURNS[self._facing]
         return self._facing
 
     def turn_right(self):
         """TODO(Q3)：原地右转 90°，返回新的 Facing（不耗电）。"""
-        self._facing = {
-            Facing.UP: Facing.RIGHT,
-            Facing.RIGHT: Facing.DOWN,
-            Facing.DOWN: Facing.LEFT,
-            Facing.LEFT: Facing.UP,
-        }[self._facing]
+        self._facing = _RIGHT_TURNS[self._facing]
         return self._facing
 
 
