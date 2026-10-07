@@ -80,8 +80,7 @@ def status_report(name, robot_type, hp, max_hp, battery):
 
 
 def analyze_damage_log(lines):
-    """TODO(Q2)：解析多源战斗日志，返回统计字典；
-    语义、边界与异常处理见题面 Q2 规范。"""
+   
     # 初始化
     by_armor = {"front": 0, "left": 0, "right": 0}
     total = 0
@@ -403,8 +402,6 @@ def decide(sensor, state, hp, heat):
 # ---------------------------------------------------------------------------
 # Q6 巡逻任务（题面 Q6·巡逻契约与验收阈值）
 # ---------------------------------------------------------------------------
-
-
 def run_patrol(grid, max_steps=500):
     """Run the patrol loop, using a shortest-path step when greedy stalls."""
     steps = 0
