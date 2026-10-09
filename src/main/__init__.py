@@ -261,6 +261,7 @@ class SentryGrid:
         if self._fuel <= 0:
             return self._pos
 
+        self._fuel -= 1
         dx, dy = self._facing.delta
         next_x = self._pos[0] + dx
         next_y = self._pos[1] + dy
@@ -268,7 +269,6 @@ class SentryGrid:
             self._collision_count += 1
         else:
             self._pos = (next_x, next_y)
-            self._fuel -= 1
         return self._pos
 
     def turn_left(self):
